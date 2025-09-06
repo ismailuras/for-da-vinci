@@ -12,6 +12,7 @@ export const fetchUsers = (): Promise<User[]> => {
 export const getUserById = (id: number): Promise<User> => {
     return apiRequest<User>(`/users/${id}`, "GET");
 };
+
 export const updateUser = (id: number, data: UserPayload): Promise<void> => {
     return apiRequest<void>(`/users/${id}`, "PUT", data);
 };
