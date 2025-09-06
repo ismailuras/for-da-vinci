@@ -1,38 +1,63 @@
-import React, { useState } from "react";
-import { Button } from "@/components/Button";
+import React, { useState, useEffect } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { createUser } from "@/services/users";
+import Modal from "@/components/CustomModal";
+import { Button } from "@/components/Button";
 import { showToast } from "@/utils/showToast";
+import { getUserById, updateUser } from "@/services/users";
 import type { CreateUserValues } from "./types";
 import { resolver } from "./resolver";
 
-interface CreateUserProps {
-  onClose: () => void;
+interface UpdateUserProps {
+  id: number;
+  onUpdated: any;
 }
 
-const CreateUser: React.FC<CreateUserProps> = ({ onClose }) => {
+const UpdateUser: React.FC<UpdateUserProps> = ({ id, onUpdated }) => {
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<CreateUserValues>({ resolver });
+  } = useForm<CreateUserValues>({ resolver: resolver });
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const fetchUser = async () => {
+      try {
+        const user = await getUserById(id);
+        setValue("name", user.name);
+        setValue("email", user.email);
+        setValue("username", user.username);
+      } catch (err) {
+        showToast("Failed to load user data.", "error");
+      }
+    };
+
+    fetchUser();
+  }, [id, isModalOpen, setValue]);
+
+  const handleModalOpen = () => setModalOpen(true);
+  const handleClose = () => setModalOpen(false);
 
   const onSubmit: SubmitHandler<CreateUserValues> = async (data) => {
     setLoading(true);
     try {
-      await createUser(data);
-      onClose();
-      showToast("User has been successfully created.", "success");
-    } catch (error) {
-      showToast("An error occured. Try again.", "error");
+      const result = await updateUser(id, data);
+      showToast("User updated successfully.", "success");
+      onUpdated(result);
+      handleClose();
+    } catch (err) {
+      showToast("Failed to update user.", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  return (
+  const UpdateForm = () => (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-5">
         <label
@@ -46,7 +71,6 @@ const CreateUser: React.FC<CreateUserProps> = ({ onClose }) => {
           type="text"
           id="name"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          placeholder="name@flowbite.com"
         />
         {errors.name && (
           <p className="py-2 text-sm text-red-500 font-medium">
@@ -54,6 +78,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ onClose }) => {
           </p>
         )}
       </div>
+
       <div className="mb-5">
         <label
           htmlFor="email"
@@ -66,9 +91,9 @@ const CreateUser: React.FC<CreateUserProps> = ({ onClose }) => {
           type="email"
           id="email"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          placeholder="name@flowbite.com"
         />
       </div>
+
       <div className="mb-5">
         <label
           htmlFor="username"
@@ -80,15 +105,31 @@ const CreateUser: React.FC<CreateUserProps> = ({ onClose }) => {
           {...register("username")}
           type="text"
           id="username"
-          placeholder="justusername"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         />
       </div>
+
       <div className="flex justify-end">
-        <Button label={loading ? "Creating..." : "Create"} />
+        <Button label={loading ? "Updating..." : "Update"} />
       </div>
     </form>
   );
+
+  return (
+    <>
+      <button className="cursor-pointer" onClick={handleModalOpen}>
+        <img src="../src/assets/edit.svg" alt="Update Icon" />
+      </button>
+      {isModalOpen && (
+        <Modal
+          title="Update User"
+          open={isModalOpen}
+          onClose={handleClose}
+          children={<UpdateForm />}
+        />
+      )}
+    </>
+  );
 };
 
-export default CreateUser;
+export default UpdateUser;
