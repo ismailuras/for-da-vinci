@@ -1,4 +1,4 @@
-export interface Root {
+export interface User {
     id: number
     name: string
     username: string
@@ -28,7 +28,7 @@ export interface Company {
     bs: string
 }
 
-export interface CreateUserRequest {
+export interface UserPayload {
     name: string;
     email: string;
 }

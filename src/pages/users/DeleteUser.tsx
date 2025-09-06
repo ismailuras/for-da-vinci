@@ -20,7 +20,7 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ id, onDeleted }) => {
       onDeleted?.();
       showToast("User has been successfully deleted.", "success");
     } catch (error) {
-      console.error("Silme hatası:", error);
+      console.error("An error occured:", error);
     } finally {
       setLoading(false);
     }

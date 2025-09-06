@@ -4,6 +4,8 @@ import NotFound from "@/components/NotFound";
 import { fetchUsers } from "@/services/users";
 import { useEffect, useState } from "react";
 import DeleteUser from "./DeleteUser";
+import UpdateUser from "./UpdateUser";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 type User = {
   id: number;
@@ -23,6 +25,7 @@ const UsersList = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [parent] = useAutoAnimate();
 
   useEffect(() => {
     const getUsers = async () => {
@@ -43,12 +46,25 @@ const UsersList = () => {
     setUsers((prev) => prev.filter((user) => user.id !== id));
   };
 
+  const handleUserUpdated = (result: User) => {
+    const { id } = result;
+
+    if (id) {
+      let newList = [...users];
+      let updatedUser: number = newList.findIndex(
+        (item: any) => item.id === id
+      );
+      newList[updatedUser] = result;
+      setUsers(newList);
+    }
+  };
+
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
   if (!users.length) return <NotFound target="Users" />;
 
   return (
-    <ul role="list" className="divide-y divide-gray-200">
+    <ul role="list" className="divide-y divide-gray-200" ref={parent}>
       {users.map((user) => (
         <li key={user.id} className="flex justify-between gap-x-6 py-5">
           <div className="flex min-w-0 gap-x-4">
@@ -73,11 +89,12 @@ const UsersList = () => {
             </div>
           </div>
 
-          <div className="hidden shrink-0 sm:flex sm:flex-row sm:items-end">
+          <div className="hidden shrink-0 sm:flex sm:flex-row sm:items-end sm:gap-2">
             <DeleteUser
               id={user.id}
               onDeleted={() => handleUserDeleted(user.id)}
             />
+            <UpdateUser onUpdated={handleUserUpdated} user={user} />
           </div>
         </li>
       ))}
