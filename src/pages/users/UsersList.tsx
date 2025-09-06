@@ -50,8 +50,8 @@ const UsersList = () => {
     const { id } = result;
 
     if (id) {
-      let newList = [...users];
-      let updatedUser: number = newList.findIndex(
+      const newList = [...users];
+      const updatedUser: number = newList.findIndex(
         (item: any) => item.id === id
       );
       newList[updatedUser] = result;
