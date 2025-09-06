@@ -2,9 +2,9 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import App from "./App";
 import "./index.css";
-import Users from "./pages/Users";
-import Layout from "./components/Layout";
-import Posts from "./pages/Posts";
+import Users from "@/pages/users/Users";
+import Layout from "@/components/Layout";
+import Posts from "@/pages/posts/Posts";
 
 const root = document.getElementById("root")!;
 

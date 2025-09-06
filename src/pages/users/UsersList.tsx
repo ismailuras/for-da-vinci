@@ -1,0 +1,82 @@
+import ErrorMessage from "@/components/ErrorMessage";
+import Loading from "@/components/Loading";
+import NotFound from "@/components/NotFound";
+import { fetchUsers } from "@/services/users";
+import { useEffect, useState } from "react";
+
+type User = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  phone: string;
+  website: string;
+  company: {
+    name: string;
+    catchPhrase: string;
+    bs: string;
+  };
+};
+
+const UsersList = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const response = await fetchUsers();
+        setUsers(response);
+      } catch (err) {
+        setError("Failed to fetch users.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getUsers();
+  }, []);
+
+  if (loading) return <Loading />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!users) return <NotFound target="Users" />;
+  console.log(users);
+
+  return (
+    <ul role="list" className="divide-y divide-gray-200">
+      {users &&
+        users.map((user) => (
+          <li
+            key={user.id}
+            className="flex justify-between gap-x-6 py-5 drop-shadow-2xl"
+          >
+            <div className="flex min-w-0 gap-x-4">
+              <img
+                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  user.name
+                )}&background=random`}
+                alt={user.name}
+                className="size-12 flex-none rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
+              />
+              <div className="min-w-0 flex-auto">
+                <p className="text-sm/6 font-semibold text-black">
+                  {user.name}
+                </p>
+                <p className="mt-1 truncate text-xs/5 text-gray-400">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+
+            <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+              <p className="text-sm/6 text-black">{user.company.name}</p>
+              <p className="mt-1 text-xs/5 text-gray-400">{user.website}</p>
+            </div>
+          </li>
+        ))}
+    </ul>
+  );
+};
+
+export default UsersList;
