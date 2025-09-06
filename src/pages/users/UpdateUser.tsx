@@ -3,16 +3,23 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import Modal from "@/components/CustomModal";
 import { Button } from "@/components/Button";
 import { showToast } from "@/utils/showToast";
-import { getUserById, updateUser } from "@/services/users";
+import { updateUser } from "@/services/users";
 import type { CreateUserValues } from "./types";
 import { resolver } from "./resolver";
 
-interface UpdateUserProps {
+interface UserProps {
   id: number;
-  onUpdated: any;
+  name: string;
+  email: string;
+  username: string;
 }
 
-const UpdateUser: React.FC<UpdateUserProps> = ({ id, onUpdated }) => {
+interface UpdateUserProps {
+  onUpdated: any;
+  user: UserProps;
+}
+
+const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -26,19 +33,10 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ id, onUpdated }) => {
   useEffect(() => {
     if (!isModalOpen) return;
 
-    const fetchUser = async () => {
-      try {
-        const user = await getUserById(id);
-        setValue("name", user.name);
-        setValue("email", user.email);
-        setValue("username", user.username);
-      } catch (err) {
-        showToast("Failed to load user data.", "error");
-      }
-    };
-
-    fetchUser();
-  }, [id, isModalOpen, setValue]);
+    setValue("name", user.name);
+    setValue("email", user.email);
+    setValue("username", user.username);
+  }, [isModalOpen, setValue]);
 
   const handleModalOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
@@ -46,7 +44,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ id, onUpdated }) => {
   const onSubmit: SubmitHandler<CreateUserValues> = async (data) => {
     setLoading(true);
     try {
-      const result = await updateUser(id, data);
+      const result = await updateUser(user.id, data);
       showToast("User updated successfully.", "success");
       onUpdated(result);
       handleClose();

@@ -94,7 +94,7 @@ const UsersList = () => {
               id={user.id}
               onDeleted={() => handleUserDeleted(user.id)}
             />
-            <UpdateUser id={user.id} onUpdated={handleUserUpdated} />
+            <UpdateUser onUpdated={handleUserUpdated} user={user} />
           </div>
         </li>
       ))}
