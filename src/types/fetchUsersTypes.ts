@@ -28,3 +28,14 @@ export interface Company {
     bs: string
 }
 
+export interface CreateUserRequest {
+    name: string;
+    email: string;
+}
+
+export interface CreateUserResponse {
+    id: number;
+    name: string;
+    email: string;
+}
+
