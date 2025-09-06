@@ -41,7 +41,6 @@ const UsersList = () => {
   if (loading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
   if (!users) return <NotFound target="Users" />;
-  console.log(users);
 
   return (
     <ul role="list" className="divide-y divide-gray-200">
@@ -70,8 +69,7 @@ const UsersList = () => {
             </div>
 
             <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-              <p className="text-sm/6 text-black">{user.company.name}</p>
-              <p className="mt-1 text-xs/5 text-gray-400">{user.website}</p>
+              <p className="text-sm/6 text-black">#{user.id}</p>
             </div>
           </li>
         ))}
