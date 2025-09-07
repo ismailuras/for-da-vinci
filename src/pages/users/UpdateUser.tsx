@@ -49,6 +49,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
       onUpdated(result);
       handleClose();
     } catch (err) {
+      console.log(err);
       showToast("Failed to update user.", "error");
     } finally {
       setLoading(false);

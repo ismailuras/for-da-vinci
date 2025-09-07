@@ -36,6 +36,7 @@ const Users: React.FC = () => {
         const response = await fetchUsers();
         setUsers(response);
       } catch (err) {
+        console.log(err);
         setError("Failed to fetch users.");
       } finally {
         setLoading(false);
