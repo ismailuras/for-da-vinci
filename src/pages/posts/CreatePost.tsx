@@ -6,11 +6,19 @@ import { showToast } from "@/utils/showToast";
 import type { CreatePostValues } from "./types";
 import { resolver } from "./resolver";
 
+type Post = {
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
+};
+
 interface CreatePostProps {
   onClose: () => void;
+  onPostCreated: (newPost: Post) => void;
 }
 
-const CreatePost: React.FC<CreatePostProps> = ({ onClose }) => {
+const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -22,10 +30,11 @@ const CreatePost: React.FC<CreatePostProps> = ({ onClose }) => {
   const onSubmit: SubmitHandler<CreatePostValues> = async (data) => {
     setLoading(true);
     try {
-      await createPost(data);
-      onClose();
+      const newPost = await createPost(data);
+      onPostCreated(newPost);
       showToast("Post has been successfully created.", "success");
     } catch (error) {
+      console.log(error);
       showToast("An error occured. Try again.", "error");
     } finally {
       setLoading(false);

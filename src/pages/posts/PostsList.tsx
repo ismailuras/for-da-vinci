@@ -4,9 +4,6 @@ import NotFound from "@/components/NotFound";
 import SelectUser from "./SelectUser";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
-import { fetchPostByUserId, fetchPosts } from "@/services/posts";
-import { useEffect, useState, useCallback } from "react";
-import { useInView } from "react-intersection-observer";
 
 type Post = {
   id: number;
@@ -15,102 +12,31 @@ type Post = {
   userId: number;
 };
 
-const PostsList = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [initialLoading, setInitialLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
-  const [selectedUserId, setSelectedUserId] = useState<number | string>("");
+interface PostsListProps {
+  posts: Post[];
+  loading: boolean;
+  initialLoading: boolean;
+  error: string | null;
+  hasMore: boolean;
+  loadMoreRef: (node?: Element | null | undefined) => void;
+  selectedUserId: number | string;
+  onPostDeleted: (id: number) => void;
+  onPostUpdated: (result: Post) => void;
+  onSelectedUserId: (id: number | string) => void;
+}
 
-  const POSTS_PER_PAGE = 10;
-
-  const { ref: loadMoreRef, inView } = useInView({
-    threshold: 0,
-    rootMargin: "100px",
-  });
-
-  const fetchMorePosts = useCallback(
-    async (pageNum: number, isInitial: boolean = false) => {
-      if (loading) return;
-
-      setLoading(true);
-      try {
-        let response;
-        if (selectedUserId) {
-          response = await fetchPostByUserId(
-            selectedUserId,
-            pageNum,
-            POSTS_PER_PAGE
-          );
-        } else {
-          response = await fetchPosts(pageNum, POSTS_PER_PAGE);
-        }
-
-        if (response.length === 0 || response.length < POSTS_PER_PAGE) {
-          setHasMore(false);
-        }
-
-        if (isInitial) {
-          setPosts(response);
-        } else {
-          setPosts((prevPosts) => [...prevPosts, ...response]);
-        }
-      } catch (err) {
-        setError("Failed to fetch posts.");
-      } finally {
-        setLoading(false);
-        if (isInitial) {
-          setInitialLoading(false);
-        }
-      }
-    },
-    [loading, selectedUserId]
-  );
-
-  useEffect(() => {
-    fetchMorePosts(1, true);
-  }, []);
-
-  useEffect(() => {
-    if (selectedUserId !== null) {
-      setPage(1);
-      setHasMore(true);
-      setInitialLoading(true);
-      fetchMorePosts(1, true);
-    }
-  }, [selectedUserId]);
-
-  useEffect(() => {
-    if (inView && hasMore && !loading && !initialLoading) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      fetchMorePosts(nextPage);
-    }
-  }, [inView, hasMore, loading, initialLoading, page, fetchMorePosts]);
-
-  const handlePostDeleted = (id: number) => {
-    setPosts((prev) => prev.filter((post) => post.id !== id));
-  };
-
-  const handlePostUpdated = (result: Post) => {
-    const { id } = result;
-
-    if (id) {
-      const newList = [...posts];
-      const updatedPost: number = newList.findIndex((item) => item.id === id);
-      if (updatedPost !== -1) {
-        newList[updatedPost] = result;
-        setPosts(newList);
-      }
-    }
-  };
-
-  const handleSelectedUserId = (id: number | string) => {
-    setSelectedUserId(id);
-  };
-
+const PostsList: React.FC<PostsListProps> = ({
+  posts,
+  loading,
+  initialLoading,
+  error,
+  hasMore,
+  loadMoreRef,
+  selectedUserId,
+  onPostDeleted,
+  onPostUpdated,
+  onSelectedUserId,
+}) => {
   if (initialLoading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
   if (!posts.length && !initialLoading) return <NotFound target="Posts" />;
@@ -119,7 +45,7 @@ const PostsList = () => {
     <div className="space-y-4">
       <div className="w-full flex justify-end">
         <SelectUser
-          handleSelectedUserId={handleSelectedUserId}
+          handleSelectedUserId={onSelectedUserId}
           selectedUserId={selectedUserId}
         />
       </div>
@@ -153,9 +79,9 @@ const PostsList = () => {
             <div className="shrink-0 flex flex-row items-start gap-2">
               <DeletePost
                 id={post.id}
-                onDeleted={() => handlePostDeleted(post.id)}
+                onDeleted={() => onPostDeleted(post.id)}
               />
-              <UpdatePost onUpdated={handlePostUpdated} post={post} />
+              <UpdatePost onUpdated={onPostUpdated} post={post} />
             </div>
           </li>
         ))}

@@ -56,6 +56,7 @@ const CreateUser: React.FC<CreateUserProps> = ({ onClose, onUserCreated }) => {
       onClose();
       showToast("User has been successfully created.", "success");
     } catch (error) {
+      console.log(error);
       showToast("An error occured. Try again.", "error");
     } finally {
       setLoading(false);

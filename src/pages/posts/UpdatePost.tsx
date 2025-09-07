@@ -49,6 +49,7 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ onUpdated, post }) => {
       onUpdated(result);
       handleClose();
     } catch (err) {
+      console.log(err);
       showToast("Failed to update post.", "error");
     } finally {
       setLoading(false);
