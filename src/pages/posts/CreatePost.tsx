@@ -90,7 +90,10 @@ const CreatePost: React.FC<CreatePostProps> = ({ onClose }) => {
         />
       </div>
       <div className="flex justify-end">
-        <Button label={loading ? "Creating..." : "Create"} />
+        <Button
+          label={loading ? "Creating..." : "Create"}
+          isDisabled={loading}
+        />
       </div>
     </form>
   );

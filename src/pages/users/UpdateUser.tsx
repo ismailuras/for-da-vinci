@@ -108,7 +108,10 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
       </div>
 
       <div className="flex justify-end">
-        <Button label={loading ? "Updating..." : "Update"} />
+        <Button
+          label={loading ? "Updating..." : "Update"}
+          isDisabled={loading}
+        />
       </div>
     </form>
   );
