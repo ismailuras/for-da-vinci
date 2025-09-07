@@ -5,6 +5,7 @@ import { createPost } from "@/services/posts";
 import { showToast } from "@/utils/showToast";
 import type { CreatePostValues } from "./types";
 import { resolver } from "./resolver";
+import type { User } from "../users/Users";
 
 type Post = {
   id: number;
@@ -16,9 +17,10 @@ type Post = {
 interface CreatePostProps {
   onClose: () => void;
   onPostCreated: (newPost: Post) => void;
+  users: User[];
 }
 
-const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
+const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated, users }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -90,13 +92,21 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated }) => {
         >
           User ID
         </label>
-        <input
+        <select
           {...register("userId", { valueAsNumber: true })}
-          type="number"
           id="userId"
-          placeholder="1"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-        />
+        >
+          <option value="" disabled>
+            Select a User
+          </option>
+          {users &&
+            users.map((item: User) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+        </select>
       </div>
       <div className="flex justify-end">
         <Button

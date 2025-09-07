@@ -6,6 +6,7 @@ import { showToast } from "@/utils/showToast";
 import { updatePost } from "@/services/posts";
 import type { CreatePostValues } from "./types";
 import { resolver } from "./resolver";
+import type { User } from "@/types/fetchUsersTypes";
 
 interface PostProps {
   id: number;
@@ -17,9 +18,10 @@ interface PostProps {
 interface UpdatePostProps {
   onUpdated: any;
   post: PostProps;
+  users: User[];
 }
 
-const UpdatePost: React.FC<UpdatePostProps> = ({ onUpdated, post }) => {
+const UpdatePost: React.FC<UpdatePostProps> = ({ onUpdated, post, users }) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -105,12 +107,21 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ onUpdated, post }) => {
         >
           User ID
         </label>
-        <input
+        <select
           {...register("userId", { valueAsNumber: true })}
-          type="number"
           id="userId"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-        />
+        >
+          <option value="" disabled>
+            Select a User
+          </option>
+          {users &&
+            users.map((item: User) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+        </select>
       </div>
 
       <div className="flex justify-end">

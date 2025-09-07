@@ -1,50 +1,22 @@
-import { fetchUsers } from "@/services/users";
 import type { User } from "@/types/fetchUsersTypes";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 interface SelectUserProps {
   handleSelectedUserId: (id: number | string) => void;
   selectedUserId: number | string;
+  users: User[];
 }
 
 const SelectUser: React.FC<SelectUserProps> = ({
   handleSelectedUserId,
   selectedUserId,
+  users,
 }) => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const response = await fetchUsers();
-        setUsers(response);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUsers();
-  }, []);
-
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     const selectedId = selectedValue === "" ? "" : parseInt(selectedValue);
     handleSelectedUserId(selectedId);
   };
-
-  if (loading) {
-    return (
-      <select
-        disabled
-        className="bg-gray-100 border border-gray-300 text-gray-400 text-sm rounded-lg block p-1.5"
-      >
-        <option>Loading users...</option>
-      </select>
-    );
-  }
 
   if (!users || users.length === 0) {
     return (

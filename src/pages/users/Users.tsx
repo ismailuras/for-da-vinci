@@ -8,7 +8,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import NotFound from "@/components/NotFound";
 import { fetchUsers } from "@/services/users";
 
-type User = {
+export type User = {
   id: number;
   name: string;
   username: string;
