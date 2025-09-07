@@ -1,10 +1,11 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Loading from "@/components/Loading";
 import NotFound from "@/components/NotFound";
-import { fetchPosts } from "@/services/posts";
-import { useEffect, useState, useCallback } from "react";
+import SelectUser from "./SelectUser";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
+import { fetchPostByUserId, fetchPosts } from "@/services/posts";
+import { useEffect, useState, useCallback } from "react";
 import { useInView } from "react-intersection-observer";
 
 type Post = {
@@ -21,6 +22,7 @@ const PostsList = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
+  const [selectedUserId, setSelectedUserId] = useState<number | string>("");
 
   const POSTS_PER_PAGE = 10;
 
@@ -35,7 +37,16 @@ const PostsList = () => {
 
       setLoading(true);
       try {
-        const response = await fetchPosts(pageNum, POSTS_PER_PAGE);
+        let response;
+        if (selectedUserId) {
+          response = await fetchPostByUserId(
+            selectedUserId,
+            pageNum,
+            POSTS_PER_PAGE
+          );
+        } else {
+          response = await fetchPosts(pageNum, POSTS_PER_PAGE);
+        }
 
         if (response.length === 0 || response.length < POSTS_PER_PAGE) {
           setHasMore(false);
@@ -55,12 +66,21 @@ const PostsList = () => {
         }
       }
     },
-    [loading]
+    [loading, selectedUserId]
   );
 
   useEffect(() => {
     fetchMorePosts(1, true);
   }, []);
+
+  useEffect(() => {
+    if (selectedUserId !== null) {
+      setPage(1);
+      setHasMore(true);
+      setInitialLoading(true);
+      fetchMorePosts(1, true);
+    }
+  }, [selectedUserId]);
 
   useEffect(() => {
     if (inView && hasMore && !loading && !initialLoading) {
@@ -87,12 +107,22 @@ const PostsList = () => {
     }
   };
 
+  const handleSelectedUserId = (id: number | string) => {
+    setSelectedUserId(id);
+  };
+
   if (initialLoading) return <Loading />;
   if (error) return <ErrorMessage message={error} />;
   if (!posts.length && !initialLoading) return <NotFound target="Posts" />;
 
   return (
     <div className="space-y-4">
+      <div className="w-full flex justify-end">
+        <SelectUser
+          handleSelectedUserId={handleSelectedUserId}
+          selectedUserId={selectedUserId}
+        />
+      </div>
       <ul role="list" className="divide-y divide-gray-200">
         {posts.map((post, index) => (
           <li
