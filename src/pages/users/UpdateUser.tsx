@@ -116,7 +116,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
   return (
     <>
       <button className="cursor-pointer" onClick={handleModalOpen}>
-        <img src="../src/assets/edit.svg" alt="Update Icon" />
+        <img src="/assets/edit.svg" alt="Update Icon" />
       </button>
       {isModalOpen && (
         <Modal

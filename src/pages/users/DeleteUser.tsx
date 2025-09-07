@@ -53,7 +53,7 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ id, onDeleted }) => {
         className="cursor-pointer"
         onClick={() => setPopperVisible((prev) => !prev)}
       >
-        <img src="../src/assets/delete.svg" alt="Delete Icon" />
+        <img src="/assets/delete.svg" alt="Delete Icon" />
       </button>
 
       {isPopperVisible && (
