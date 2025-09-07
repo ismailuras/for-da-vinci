@@ -1,69 +1,66 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite Project For Da Vinci
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Setup
 
-Currently, two official plugins are available:
+```bash
+# Install dependencies
+npm install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Run development server
+npm run dev
 
-## Expanding the ESLint configuration
+# Build for production
+npm run build
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Preview production build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Overview
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+This project was built as part of a web development assignment. It demonstrates a basic frontend implementation using React, TypeScript, and Vite, with data fetched from JSONPlaceholder.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The application provides:
+- A homepage with navigation to Users and Posts
+- CRUD operations on both Users and Posts
+- Post filtering with userId field.
+- Responsive UI styled with TailwindCSS
+
+### API Limitations
+
+Since the API is fake, some operations have limitations:
+- Newly created items do not persist with unique IDs (e.g., duplicate IDs on create may cause conflicts when updating or deleting)
+- Updating non-persistent items is not possible
+
+## Features
+
+- User list with CRUD operations
+- Post list with CRUD operations
+- Responsive design
+- Custom hooks for reusability
+- Type safety with TypeScript
+- Linting with ESLint
+
+## Libraries and Tools Used
+
+- **React Hook Form** – form submission and validation
+- **Axios** – API requests
+- **React Hot Toast** – toast notifications
+- **React Intersection Observer** – rendering optimization for post lists
+- **React Modal & React Popper** – modals and popovers
+- **TailwindCSS** – responsive styling
+- **ESLint + TypeScript ESLint** – linting and type checking
+
+## Notes
+
+- No external state management library was used since the project scope was small
+- A custom hook was created for user-related logic to encourage reusability and cleaner code
+- Focus was placed on responsiveness, performance, and maintaining type safety
+
+## Tech Stack
+
+- React 
+- TypeScript
+- Vite
+- TailwindCSS
+- JSONPlaceholder API
