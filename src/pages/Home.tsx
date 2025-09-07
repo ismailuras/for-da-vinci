@@ -1,6 +1,6 @@
 const Home = () => {
   return (
-    <div>
+    <div className="px-7 xl:px-0">
       Welcome. You can view the{" "}
       <span className="text-teal-800 font-semibold">Users</span> and{" "}
       <span className="text-teal-800 font-semibold">Posts</span> pages and

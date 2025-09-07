@@ -10,7 +10,7 @@ const Posts: React.FC = () => {
   const handleClose = () => setModalOpen(false);
 
   return (
-    <>
+    <div className="px-6 xl:px-0">
       <div className="w-full flex justify-end ">
         <Button label="Add New Post" onClick={() => setModalOpen(true)} />
       </div>
@@ -27,7 +27,7 @@ const Posts: React.FC = () => {
           onClose={handleClose}
         />
       )}
-    </>
+    </div>
   );
 };
 

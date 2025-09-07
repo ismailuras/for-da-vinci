@@ -16,8 +16,8 @@ const Header = () => {
               Da Vinci
             </span>
           </Link>
-          <div className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1">
-            <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+          <div className="flex justify-between">
+            <ul className="flex flex-row gap-6 mt-4 font-medium">
               {menuItems.map(({ id, path, label }: MenuItem) => (
                 <li key={id}>
                   <Link to={path}>{label}</Link>

@@ -34,7 +34,7 @@ const Popper: React.FC<PopperProps> = ({
         ref={setPopperElement}
         style={styles.popper}
         {...attributes.popper}
-        className="z-50 bg-white shadow-md rounded-md p-4"
+        className="z-50 bg-white shadow-md rounded-md p-4 aspect-square w-40 h-40 overflow-auto sm:aspect-auto sm:w-auto sm:h-auto"
       >
         {content}
         <div

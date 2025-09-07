@@ -130,13 +130,13 @@ const PostsList = () => {
             className="flex justify-between gap-x-6 py-5"
           >
             <div className="flex min-w-0 gap-x-4">
-              <div className="size-12 flex-none rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="size-8 md:size-12 flex-none rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm">
                 #{post.id}
               </div>
               <div className="min-w-0 flex-auto">
-                <div className="flex gap-1">
+                <div className="flex flex-col md:flex-row gap-1">
                   <p className="text-sm/6 text-black">Post #{post.id}</p>
-                  {"-"}
+                  <span className="hidden md:block">-</span>
                   <p className="text-sm/6 font-semibold text-black">
                     {post.title}
                   </p>
@@ -150,7 +150,7 @@ const PostsList = () => {
               </div>
             </div>
 
-            <div className="hidden shrink-0 sm:flex sm:flex-row sm:items-end sm:gap-2">
+            <div className="shrink-0 flex flex-row items-start gap-2">
               <DeletePost
                 id={post.id}
                 onDeleted={() => handlePostDeleted(post.id)}
