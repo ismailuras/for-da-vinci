@@ -1,8 +1,4 @@
-import ErrorMessage from "@/components/ErrorMessage";
-import Loading from "@/components/Loading";
-import NotFound from "@/components/NotFound";
-import { fetchUsers } from "@/services/users";
-import { useEffect, useState } from "react";
+import React from "react";
 import DeleteUser from "./DeleteUser";
 import UpdateUser from "./UpdateUser";
 
@@ -20,47 +16,17 @@ type User = {
   };
 };
 
-const UsersList = () => {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+interface UsersListProps {
+  users: User[];
+  onUserDeleted: (id: number) => void;
+  onUserUpdated: (user: User) => void;
+}
 
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const response = await fetchUsers();
-        setUsers(response);
-      } catch (err) {
-        setError("Failed to fetch users.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUsers();
-  }, []);
-
-  const handleUserDeleted = (id: number) => {
-    setUsers((prev) => prev.filter((user) => user.id !== id));
-  };
-
-  const handleUserUpdated = (result: User) => {
-    const { id } = result;
-
-    if (id) {
-      const newList = [...users];
-      const updatedUser: number = newList.findIndex(
-        (item: any) => item.id === id
-      );
-      newList[updatedUser] = result;
-      setUsers(newList);
-    }
-  };
-
-  if (loading) return <Loading />;
-  if (error) return <ErrorMessage message={error} />;
-  if (!users.length) return <NotFound target="Users" />;
-
+const UsersList: React.FC<UsersListProps> = ({
+  users,
+  onUserDeleted,
+  onUserUpdated,
+}) => {
   return (
     <ul role="list" className="divide-y divide-gray-200">
       {users.map((user, index) => (
@@ -91,11 +57,8 @@ const UsersList = () => {
           </div>
 
           <div className="shrink-0 flex flex-row items-end gap-2">
-            <DeleteUser
-              id={user.id}
-              onDeleted={() => handleUserDeleted(user.id)}
-            />
-            <UpdateUser onUpdated={handleUserUpdated} user={user} />
+            <DeleteUser id={user.id} onDeleted={() => onUserDeleted(user.id)} />
+            <UpdateUser onUpdated={onUserUpdated} user={user} />
           </div>
         </li>
       ))}

@@ -6,6 +6,7 @@ type ButtonProps = {
   className?: string;
   onClick?: () => void;
   type?: "submit" | "button" | "reset";
+  isDisabled?: boolean;
 };
 
 export const Button: React.FC<ButtonProps> = ({
