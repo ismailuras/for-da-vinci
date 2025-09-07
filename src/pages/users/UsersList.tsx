@@ -90,7 +90,7 @@ const UsersList = () => {
             </div>
           </div>
 
-          <div className="hidden shrink-0 sm:flex sm:flex-row sm:items-end sm:gap-2">
+          <div className="shrink-0 flex flex-row items-end gap-2">
             <DeleteUser
               id={user.id}
               onDeleted={() => handleUserDeleted(user.id)}
