@@ -5,7 +5,6 @@ import { fetchPosts } from "@/services/posts";
 import { useEffect, useState, useCallback } from "react";
 import DeletePost from "./DeletePost";
 import UpdatePost from "./UpdatePost";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useInView } from "react-intersection-observer";
 
 type Post = {
@@ -22,7 +21,6 @@ const PostsList = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
-  const [parent] = useAutoAnimate();
 
   const POSTS_PER_PAGE = 10;
 
@@ -81,9 +79,7 @@ const PostsList = () => {
 
     if (id) {
       const newList = [...posts];
-      const updatedPost: number = newList.findIndex(
-        (item: any) => item.id === id
-      );
+      const updatedPost: number = newList.findIndex((item) => item.id === id);
       if (updatedPost !== -1) {
         newList[updatedPost] = result;
         setPosts(newList);
@@ -102,7 +98,6 @@ const PostsList = () => {
           <li
             key={`${post.id}-${index}`}
             className="flex justify-between gap-x-6 py-5"
-            ref={parent}
           >
             <div className="flex min-w-0 gap-x-4">
               <div className="size-12 flex-none rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm">

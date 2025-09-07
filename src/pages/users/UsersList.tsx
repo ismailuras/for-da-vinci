@@ -5,7 +5,6 @@ import { fetchUsers } from "@/services/users";
 import { useEffect, useState } from "react";
 import DeleteUser from "./DeleteUser";
 import UpdateUser from "./UpdateUser";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 type User = {
   id: number;
@@ -25,7 +24,6 @@ const UsersList = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [parent] = useAutoAnimate();
 
   useEffect(() => {
     const getUsers = async () => {
@@ -64,9 +62,12 @@ const UsersList = () => {
   if (!users.length) return <NotFound target="Users" />;
 
   return (
-    <ul role="list" className="divide-y divide-gray-200" ref={parent}>
-      {users.map((user) => (
-        <li key={user.id} className="flex justify-between gap-x-6 py-5">
+    <ul role="list" className="divide-y divide-gray-200">
+      {users.map((user, index) => (
+        <li
+          key={`${user.id}-${index}`}
+          className="flex justify-between gap-x-6 py-5"
+        >
           <div className="flex min-w-0 gap-x-4">
             <img
               src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
