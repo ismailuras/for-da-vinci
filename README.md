@@ -16,6 +16,10 @@ npm run build
 npm run preview
 ```
 
+## Deploy Link on Vercel
+
+https://for-da-vinci-git-feat-user-hook-ismailuras09gmailcoms-projects.vercel.app
+
 ## Overview
 
 This project was built as part of a web development assignment. It demonstrates a basic frontend implementation using React, TypeScript, and Vite, with data fetched from JSONPlaceholder.
