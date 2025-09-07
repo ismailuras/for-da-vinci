@@ -3,23 +3,23 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import Modal from "@/components/CustomModal";
 import { Button } from "@/components/Button";
 import { showToast } from "@/utils/showToast";
-import { updateUser } from "@/services/users";
-import type { CreateUserValues } from "./types";
+import { updatePost } from "@/services/posts";
+import type { CreatePostValues } from "./types";
 import { resolver } from "./resolver";
 
-interface UserProps {
+interface PostProps {
   id: number;
-  name: string;
-  email: string;
-  username: string;
+  title: string;
+  body: string;
+  userId: number;
 }
 
-interface UpdateUserProps {
+interface UpdatePostProps {
   onUpdated: any;
-  user: UserProps;
+  post: PostProps;
 }
 
-const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
+const UpdatePost: React.FC<UpdatePostProps> = ({ onUpdated, post }) => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -28,28 +28,28 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<CreateUserValues>({ resolver: resolver });
+  } = useForm<CreatePostValues>({ resolver: resolver });
 
   useEffect(() => {
     if (!isModalOpen) return;
 
-    setValue("name", user.name);
-    setValue("email", user.email);
-    setValue("username", user.username);
+    setValue("title", post.title);
+    setValue("body", post.body);
+    setValue("userId", post.userId);
   }, [isModalOpen, setValue]);
 
   const handleModalOpen = () => setModalOpen(true);
   const handleClose = () => setModalOpen(false);
 
-  const onSubmit: SubmitHandler<CreateUserValues> = async (data) => {
+  const onSubmit: SubmitHandler<CreatePostValues> = async (data) => {
     setLoading(true);
     try {
-      const result = await updateUser(user.id, data);
-      showToast("User updated successfully.", "success");
+      const result = await updatePost(post.id, data);
+      showToast("Post updated successfully.", "success");
       onUpdated(result);
       handleClose();
     } catch (err) {
-      showToast("Failed to update user.", "error");
+      showToast("Failed to update post.", "error");
     } finally {
       setLoading(false);
     }
@@ -59,50 +59,55 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-5">
         <label
-          htmlFor="name"
+          htmlFor="title"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
-          Name
+          Title
         </label>
         <input
-          {...register("name")}
+          {...register("title")}
           type="text"
-          id="name"
+          id="title"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         />
-        {errors.name && (
+        {errors.title && (
           <p className="py-2 text-sm text-red-500 font-medium">
-            {errors.name.message}
+            {errors.title.message}
           </p>
         )}
       </div>
 
       <div className="mb-5">
         <label
-          htmlFor="email"
+          htmlFor="body"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
-          Email
+          Body
         </label>
-        <input
-          {...register("email")}
-          type="email"
-          id="email"
+        <textarea
+          {...register("body")}
+          id="body"
+          rows={4}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         />
+        {errors.body && (
+          <p className="py-2 text-sm text-red-500 font-medium">
+            {errors.body.message}
+          </p>
+        )}
       </div>
 
       <div className="mb-5">
         <label
-          htmlFor="username"
+          htmlFor="userId"
           className="block mb-2 text-sm font-medium text-gray-900"
         >
-          Username
+          User ID
         </label>
         <input
-          {...register("username")}
-          type="text"
-          id="username"
+          {...register("userId", { valueAsNumber: true })}
+          type="number"
+          id="userId"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
         />
       </div>
@@ -120,7 +125,7 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
       </button>
       {isModalOpen && (
         <Modal
-          title="Update User"
+          title="Update Post"
           open={isModalOpen}
           onClose={handleClose}
           children={<UpdateForm />}
@@ -130,4 +135,4 @@ const UpdateUser: React.FC<UpdateUserProps> = ({ onUpdated, user }) => {
   );
 };
 
-export default UpdateUser;
+export default UpdatePost;

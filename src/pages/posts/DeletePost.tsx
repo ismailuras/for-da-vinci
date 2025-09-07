@@ -1,24 +1,24 @@
 import Popper from "@/components/Popper";
 import React, { useState } from "react";
-import { deleteUser } from "@/services/users";
+import { deletePost } from "@/services/posts";
 import { showToast } from "@/utils/showToast";
 
-interface DeleteUserProps {
+interface DeletePostProps {
   id: number;
   onDeleted?: () => void;
 }
 
-const DeleteUser: React.FC<DeleteUserProps> = ({ id, onDeleted }) => {
+const DeletePost: React.FC<DeletePostProps> = ({ id, onDeleted }) => {
   const [isPopperVisible, setPopperVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleDelete = async () => {
     try {
       setLoading(true);
-      await deleteUser(id);
+      await deletePost(id);
       setPopperVisible(false);
       onDeleted?.();
-      showToast("User has been successfully deleted.", "success");
+      showToast("Post has been successfully deleted.", "success");
     } catch (error) {
       console.error("An error occured:", error);
     } finally {
@@ -28,7 +28,7 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ id, onDeleted }) => {
 
   const DeleteContent = () => (
     <div className="flex flex-col gap-2">
-      <p className="text-sm">Are you sure you want to delete this user?</p>
+      <p className="text-sm">Are you sure you want to delete this post?</p>
       <div className="flex gap-2 justify-end mt-2">
         <button
           onClick={() => setPopperVisible(false)}
@@ -65,4 +65,4 @@ const DeleteUser: React.FC<DeleteUserProps> = ({ id, onDeleted }) => {
   );
 };
 
-export default DeleteUser;
+export default DeletePost;
