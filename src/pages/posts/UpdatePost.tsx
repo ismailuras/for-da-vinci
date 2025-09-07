@@ -121,7 +121,7 @@ const UpdatePost: React.FC<UpdatePostProps> = ({ onUpdated, post }) => {
   return (
     <>
       <button className="cursor-pointer" onClick={handleModalOpen}>
-        <img src="/assets/edit.svg" alt="Update Icon" />
+        <img src="/static/images/edit.svg" alt="Update Icon" />
       </button>
       {isModalOpen && (
         <Modal
