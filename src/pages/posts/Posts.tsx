@@ -5,6 +5,7 @@ import Modal from "@/components/CustomModal";
 import CreatePost from "./CreatePost";
 import { fetchPostByUserId, fetchPosts } from "@/services/posts";
 import { useInView } from "react-intersection-observer";
+import { useUsers } from "@/hooks/useUsers";
 
 type Post = {
   id: number;
@@ -22,6 +23,7 @@ const Posts: React.FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [selectedUserId, setSelectedUserId] = useState<number | string>("");
+  const { users } = useUsers();
 
   const POSTS_PER_PAGE = 10;
 
@@ -68,10 +70,6 @@ const Posts: React.FC = () => {
     },
     [loading, selectedUserId]
   );
-
-  useEffect(() => {
-    fetchMorePosts(1, true);
-  }, []);
 
   useEffect(() => {
     if (selectedUserId !== null) {
@@ -126,6 +124,7 @@ const Posts: React.FC = () => {
 
       <div className="my-6">
         <PostsList
+          users={users}
           posts={posts}
           loading={loading}
           initialLoading={initialLoading}
@@ -145,6 +144,7 @@ const Posts: React.FC = () => {
           open={isModalOpen}
           children={
             <CreatePost
+              users={users}
               onClose={handleClose}
               onPostCreated={handlePostCreated}
             />

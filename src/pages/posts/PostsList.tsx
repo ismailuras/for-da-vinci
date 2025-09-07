@@ -14,6 +14,7 @@ type Post = {
 
 interface PostsListProps {
   posts: Post[];
+  users: any;
   loading: boolean;
   initialLoading: boolean;
   error: string | null;
@@ -27,6 +28,7 @@ interface PostsListProps {
 
 const PostsList: React.FC<PostsListProps> = ({
   posts,
+  users,
   loading,
   initialLoading,
   error,
@@ -45,6 +47,7 @@ const PostsList: React.FC<PostsListProps> = ({
     <div className="space-y-4">
       <div className="w-full flex justify-end">
         <SelectUser
+          users={users}
           handleSelectedUserId={onSelectedUserId}
           selectedUserId={selectedUserId}
         />
@@ -81,7 +84,7 @@ const PostsList: React.FC<PostsListProps> = ({
                 id={post.id}
                 onDeleted={() => onPostDeleted(post.id)}
               />
-              <UpdatePost onUpdated={onPostUpdated} post={post} />
+              <UpdatePost onUpdated={onPostUpdated} post={post} users={users} />
             </div>
           </li>
         ))}
